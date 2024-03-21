@@ -42,7 +42,6 @@ L = np.transpose(A)@A
 
 # Form graph Hemholtzian
 H = A@np.transpose(A)+ np.transpose(B)@B
-#H = np.array([[2, 2, -1, 0, 1], [-1, -1, 2, -3, 1], [1, 1, -2, 0, -1], [0, 0, 1, 1, 1]])
 
 # Put Hemholtzian into reduced row echelon form
 rref_H = sp.Matrix(H).rref()
@@ -51,14 +50,16 @@ rref_H = sp.Matrix(H).rref()
 pivots = list(rref_H[1])
 nonPivots = list(set(rref_H[1])^set(range(np.shape(H)[1])))
 
+# Calculate Betti number
+Betti = len(nonPivots)
 
 # Convert back to nparray
 rref_H = np.array(rref_H[0])
 
 # Initialise basis for kernel
 K = []
-Betti = len(nonPivots)
 
+# Find basis of kernel
 for n in range(len(nonPivots)):
     v = np.zeros(np.shape(H)[1])
     v[nonPivots[n]] = 1
@@ -67,6 +68,7 @@ for n in range(len(nonPivots)):
         v[i] = -rref_H[j][nonPivots[n]]
         j = j + 1
     K.append(list(v))
+
 
 print(f" The Kernel of H is spanned by {K}")
 print(f" The Betti number is {Betti}")
